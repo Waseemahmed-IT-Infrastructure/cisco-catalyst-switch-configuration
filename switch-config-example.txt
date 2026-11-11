@@ -1,0 +1,92 @@
+
+
+!
+! Cisco Catalyst 2960-X
+! Sample configuration for documentation only
+! Not a production configuration
+!
+
+hostname EXAMPLE-SW01
+
+!
+! VLAN Configuration
+!
+vlan 10
+ name USERS
+!
+vlan 20
+ name SERVERS
+!
+vlan 30
+ name PRINTERS
+!
+vlan 99
+ name MANAGEMENT
+!
+
+!
+! Spanning Tree
+!
+spanning-tree mode rapid-pvst
+spanning-tree loopguard default
+spanning-tree portfast default
+
+!
+! Access Port - User Device
+!
+interface GigabitEthernet1/0/1
+ description USER-DEVICE
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 5
+ switchport port-security violation restrict
+ storm-control broadcast level pps 500 250
+!
+
+!
+! Access Port - Printer
+!
+interface GigabitEthernet1/0/2
+ description NETWORK-PRINTER
+ switchport mode access
+ switchport access vlan 30
+!
+
+!
+! Trunk Port - Uplink
+!
+interface GigabitEthernet1/0/49
+ description SWITCH-UPLINK
+ switchport mode trunk
+ ip dhcp snooping trust
+!
+
+!
+! Management IP - Example Address
+!
+interface Vlan99
+ description SWITCH-MANAGEMENT
+ ip address 192.0.2.10 255.255.255.0
+ no shutdown
+!
+
+ip default-gateway 192.0.2.1
+
+!
+! SSH
+!
+ip ssh version 2
+
+!
+! Verification Commands
+! Run from privileged EXEC mode
+!
+! show vlan brief
+! show interfaces status
+! show interfaces trunk
+! show spanning-tree
+! show ip interface brief
+! show running-config
+!
+! End of sample
